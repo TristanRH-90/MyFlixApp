@@ -1,50 +1,43 @@
 const express = require('express'),
-  morgan = require('morgan'),
-  fs = require('fs'),
-  path = require('path');
+    app = express(),
+    bodyParser = require('body-parser'),
+    uuid = require(uuid);
 
-const app = express();
-const accessLogStream = fs.createWriteStream(path.join(__dirname, 'log.txt'), { flags: 'a' });
+app.use(bodyParser.json());
 
-// morgan logger
-app.use(morgan('common', { stream: accessLogStream }));
-app.use(express.static('public'));
+let users = [{
+    id: 1,
+    name: "ayden",
+    favoriteMovies: []
+  },
+  {
+    id: 2,
+    name: "abbi",
+    favoriteMovies: []
+  },]
 
-let topMovies = [
+let movies = [
+    
     {
-        title: 'Harry Potter and the Sorcerer\'s Stone',
-        author: 'J.K. Rowling'
-      },
-      {
-        title: 'Lord of the Rings',
-        author: 'J.R.R. Tolkien'
-      },
-      {
-        title: 'Twilight',
-        author: 'Stephanie Meyer'
-      }
-    ];
+    title: 'Harry Potter and the Sorcerer\'s Stone',
+    author: 'J.K. Rowling'
+  },
+  {
+    title: 'Lord of the Rings',
+    author: 'J.R.R. Tolkien'
+  },
+  {
+    title: 'Twilight',
+    author: 'Stephanie Meyer'
+  }
+];
 
-// GET requests
-app.get('/', (req, res) => {
-    console.log('Welcome to myCinema');
-    res.send('Welcome to myCinema!');
-  }),
+  //READ
 
-  app.get('/movies', (req, res) => {                  
-    console.log('Top movies request');
-    res.json(topMovies);
-  });
-  app.get('/documentation', (req, res) => {                  
-    console.log('Documentation Request');
-    res.send('All documentation found here.');
-  });
+  app.get('/movies',(req, res) => {res.status(200).json(movies) })
 
-  // Morgan middleware error handling function
-  app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Error');
-  });
+
+
 // listen for requests
 app.listen(8080, () => {
   console.log('Your app is listening on port 8080.');
